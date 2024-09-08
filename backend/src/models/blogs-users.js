@@ -39,6 +39,8 @@ export function getAll() {
     INNER JOIN users
     ON blog_posts.post_user_id = users.user_id
     WHERE archived = 0
+    ORDER BY
+    blog_posts.post_datetime DESC
     `)
         .then(([queryResult]) => {
             return queryResult.map(

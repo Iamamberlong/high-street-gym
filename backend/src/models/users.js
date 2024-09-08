@@ -179,11 +179,39 @@ export function getByEmailAddress(emailAddress) {
                     result.user_address  
                 )
             } else {
-                return Promise.reject("no matching results")
+                return Promise.reject("Email does not exist.")
             }
 
         })
 }
+
+// search user by their phone
+export function getByPhone(phone) {
+    return db_conn.query(`SELECT * FROM users WHERE user_phone = ? AND user_removed = 0`, [phone])
+        .then(([queryResult]) => {
+            // check that at least 1 match was found
+            if (queryResult.length > 0) {
+                // get the first matching result
+                const result = queryResult[0]
+
+                // convert result into a model object
+                return newUser(
+                    result.user_id,
+                    result.user_email,
+                    result.user_password,
+                    result.user_role,
+                    result.user_phone,
+                    result.user_firstname,
+                    result.user_lastname,
+                    result.user_address  
+                )
+            } else {
+                return Promise.reject("Phone does not exist.")
+            }
+
+        })
+}
+
 
 // search user by their email address
 export function getByUserRole(userRole) {

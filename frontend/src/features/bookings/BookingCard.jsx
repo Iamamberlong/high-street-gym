@@ -4,7 +4,7 @@ const BookingCard = ({ booking, onDelete, userRole }) => {
   const { id, activity_name, trainer_firstname, trainer_lastname, location_name, class_datetime } = booking;
 
   return (
-    <div className="flex flex-col class-card bg-white shadow-md rounded-lg p-4">
+    <div className="flex flex-col class-card shadow-md rounded-lg p-4">
       <span className="class-list-data text-blue-800 text-xl">{activity_name}</span>
       <span className="class-list-data">{trainer_firstname} {trainer_lastname}</span>
       <span className="class-list-data text-blue-600">{location_name}</span>
@@ -12,7 +12,7 @@ const BookingCard = ({ booking, onDelete, userRole }) => {
       
 
       {userRole && (
-        <button onClick={() => onDelete(id)} className="btn btn-danger mt-4 w-full max-w-xs">
+        <button onClick={() => onDelete(id)} className="btn btn-danger mt-4 w-full max-w-xs bg-danger text-white border-2 border-light">
           Cancel
         </button>
       )}

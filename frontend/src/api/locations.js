@@ -7,7 +7,9 @@ export async function getAll() {
         const response = await axios.get(`${API_URL}/locations`, {
             headers: { 'Content-Type': 'application/json' }
         });
-        return response.data.locations; // Ensure your backend responds with 'locations'
+        console.log("response.data.locations: ", response.data.locations)
+        return response.data.locations; 
+
     } catch (error) {
         throw error.response?.data || error.message;
     }
@@ -19,7 +21,7 @@ export async function getByID(locationID) {
         const response = await axios.get(`${API_URL}/locations/${locationID}`, {
             headers: { 'Content-Type': 'application/json' }
         });
-        return response.data.location; // Ensure your backend responds with 'location'
+        return response.data.location; 
     } catch (error) {
         throw error.response?.data || error.message;
     }
@@ -38,7 +40,7 @@ export async function create(location, authenticationKey) {
                 }
             }
         );
-        return response.data.location; // Ensure your backend responds with 'location'
+        return response.data.location; 
     } catch (error) {
         throw error.response?.data || error.message;
     }
@@ -57,7 +59,7 @@ export async function update(location, authenticationKey) {
                 }
             }
         );
-        return response.data.location; // Ensure your backend responds with 'location'
+        return response.data.location; 
     } catch (error) {
         throw error.response?.data || error.message;
     }

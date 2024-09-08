@@ -2,8 +2,8 @@ import { useState } from "react";
 import * as Blogs from "../../api/blogs";
 import { useNavigate } from "react-router-dom";
 import { useAuthentication } from "../authentication";
-import Header from "../../common/Header";
-import Footer from "../../common/Footer";
+import PageLayout from "../../common/PageLayout";
+import BlogForm from "./BlogForm"; // Import the reusable BlogForm component
 
 export default function CreateBlogPage() {
   const [title, setTitle] = useState("");
@@ -21,12 +21,10 @@ export default function CreateBlogPage() {
         content,
       };
       const response = await Blogs.create(newBlog, token);
-      console.log("response is: ", response.data.blog[0].insertId)
 
       if (response.status === 201) {
-        const blogId = response.data.blog[0].insertId
-        console.log("blog id is: ", blogId)
-      
+        const blogId = response.blog[0].insertId;
+        console.log("blog id is: ", blogId);
         navigate(`/blogs/${blogId}`); // Redirect to MyBlogsPage after successful creation
       } else {
         setError("Failed to create blog post.");
@@ -38,37 +36,22 @@ export default function CreateBlogPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-    <Header />
-    <div className="container p-4 mx-auto">
-      <h2 className="text-center">Create New Blog</h2>
-      {error && <div className="alert alert-danger">{error}</div>}
-      <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
-        <div className="form-group mb-4">
-          <label htmlFor="title">Title</label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            className="block w-full p-2 border border-gray-300 rounded"
+    <PageLayout>
+      <div className="flex flex-col min-h-screen">
+        <div className="container p-4 mx-auto">
+          <h2 className="text-center">Create New Blog</h2>
+          {/* Use the BlogForm component and pass the necessary props */}
+          <BlogForm
+            title={title}
+            content={content}
+            setTitle={setTitle}
+            setContent={setContent}
+            error={error}
+            onSubmit={handleSubmit}
+            submitButtonText="Create Blog"
           />
         </div>
-        <div className="form-group mb-4">
-          <label htmlFor="content">Content</label>
-          <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            required
-            className="block w-full max-w-3xl p-2 h-96 border border-gray-300 rounded"
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">Create Blog</button>
-      </form>
-    </div>
-    <Footer />
-    </div>
+      </div>
+    </PageLayout>
   );
 }

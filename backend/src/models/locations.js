@@ -10,7 +10,7 @@ export function newLocation(
         id,
         name,
         address,
-        contactNumber
+        contactNumber,
     }
 }
 
@@ -36,7 +36,7 @@ export function create(location) {
     return db_conn.query(
         `INSERT INTO locations (location_name, location_address, location_phone, location_removed)
         VALUES (?, ?, ?, ?)`,
-        [location.name, location.address, location.phone, 0] // Assuming location_removed defaults to 0
+        [location.name, location.address, location.contactNumber, 0] 
     );
 }
 
@@ -86,7 +86,7 @@ export function update(location) {
             location_address = ?, 
             location_phone = ?
         WHERE location_id = ?`,
-        [location.name, location.address, location.phone, location.id]
+        [location.name, location.address, location.contactNumber, location.id]
     );
 }
 

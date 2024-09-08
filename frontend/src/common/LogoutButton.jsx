@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 const handleLogout = () => {
   // Remove JWT from local storage
   localStorage.removeItem('jwtToken');

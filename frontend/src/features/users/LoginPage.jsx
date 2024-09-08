@@ -27,8 +27,12 @@ function LoginPage() {
       setStatusMessage("Login successful!");
       navigate("/");
     } catch (error) {
-      setStatusMessage("Login failed: " + error);
-    }
+      if (error.response && error.response.status === 400) {
+        setStatusMessage("Email or password does not match.");
+      } else {
+        setStatusMessage("email or password does not match, please try again.")
+      }  
+    } 
   };
 
   return (
@@ -36,7 +40,7 @@ function LoginPage() {
       <Header />
       <div className="flex flex-col items-center w-full h-screen p-4">
         <form
-          className="flex flex-col max-w-sm w-full p-6 bg-white shadow-lg rounded-lg mt-4"
+          className="flex flex-col max-w-sm w-full p-6 shadow-lg rounded-lg mt-4"
           onSubmit={onLoginSubmit}
         >
           <h2 className="text-3xl text-center mb-6">Login</h2>
@@ -46,7 +50,7 @@ function LoginPage() {
             </label>
             <input
               type="email"
-              placeholder="example@email.com"
+              placeholder="example@gmail.com"
               className="input input-bordered w-full"
               value={formData.email}
               onChange={(e) =>
@@ -64,7 +68,7 @@ function LoginPage() {
             </label>
             <input
               type="password"
-              placeholder="********"
+              placeholder="******"
               className="input input-bordered w-full"
               value={formData.password}
               onChange={(e) =>

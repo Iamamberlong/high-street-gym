@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { RestrictedRoute } from "./common/RestrictedRoute";
 import ClassListPage from "./features/classes/ClassListPage";
-import DashboardPage from "./features/users/DashboardPage";
 import LoginPage from "./features/users/LoginPage";
 import RegisterPage from "./features/users/RegisterPage";
 import BookingListPage from "./features/bookings/BookingListPage";
@@ -18,6 +17,10 @@ import ManageUsersPage from "./features/users/ManageUsers";
 import TrainerListPage from "./features/users/TrainerListPage";
 import ManageClassPage from "./features/classes/ManageClassesPage";
 import CreateBlogPage from "./features/blogs/CreateBlogPage";
+import EditBlogPage from "./features/blogs/EditBlogPage"
+import CreateClassPage from "./features/classes/CreateClassPage"
+import UpLoadPage from "./features/users/UpLoadPage";
+
 
 
 const router = createBrowserRouter([
@@ -30,20 +33,30 @@ const router = createBrowserRouter([
         element: <LoginPage />
     },
     {
-        path: "/dashboard",
-        element: <DashboardPage />
+        path: "/my-profile",
+        element: <RestrictedRoute allowedRoles={["admin", "member", "trainer"]}>
+        <MyProfilePage />
+    </RestrictedRoute>
     },
     {
         path: "/manage-users",
         element: <ManageUsersPage />
     },
     {
+        path: "/upload",
+        element: <UpLoadPage />
+    },
+    {
         path: "/blogs",
         element: <BlogListPage />
     },
     {
-        path:"/blogs/create",
+        path: "/blogs/create",
         element: <CreateBlogPage />
+    },
+    {
+        path: "/create-class",
+        element: <CreateClassPage />
     },
     {
         path: "/users",
@@ -52,7 +65,7 @@ const router = createBrowserRouter([
         </RestrictedRoute>
     },
     {
-        path: "/classes",
+        path: "/classes/",
         element: <ClassListPage />    
     },
     {
@@ -88,12 +101,6 @@ const router = createBrowserRouter([
         element: <LocationListPage />
     },
     {
-        path: "/my-profile",
-        element: <RestrictedRoute allowedRoles={["admin", "member", "trainer"]}>
-        <MyProfilePage />
-        </RestrictedRoute>
-    },
-    {
         path: "/my-bookings",
         element: <RestrictedRoute allowedRoles={["admin", "member", "trainer"]}>
             <MyBookingsPage />
@@ -108,7 +115,7 @@ const router = createBrowserRouter([
     {
         path: "/blogs/edit/:id",
         element: <RestrictedRoute allowedRoles={["admin", "member", "trainer"]}>
-            <BlogContentPage />
+            <EditBlogPage />
         </RestrictedRoute>
     }
 

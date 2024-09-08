@@ -1,19 +1,15 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Header from "../../common/Header"
-import Banner from "./Banner"
-import Footer from '../../common/Footer';
-// import LocationSection from "./LocationSection"
-// import TrainerSection from "../users/TrainerSection"
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import PageLayout from "../../common/PageLayout";
+import Banner from "./Banner";
+import AboutUs from "./AboutUs";
 
 const HomePage = () => {
   return (
-    <div>
-      <Header />
+    <PageLayout>
       <Banner />
-
-      <Footer />
-    </div>
+      <AboutUs />
+    </PageLayout>
   );
 };
 

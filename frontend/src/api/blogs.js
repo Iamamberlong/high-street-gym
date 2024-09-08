@@ -25,17 +25,37 @@ export async function getBySearchTerm(searchTerm) {
     }
 }
 
+export async function getByIdToEdit(blogID, token) {
+    try {
+        const response = await axios.get(`${API_URL}/blogs/edit/${blogID}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        console.log("response.data.blogs: ", response.data.blog)
+        return response.data.blog
+    } catch (error) {
+        console.error('Error fetching my blogs using token ', error)
+        throw error
+    }
+}
 
-export async function getByID(blogID) {
+
+export async function getById(blogID) {
     try {
         const response = await axios.get(`${API_URL}/blogs/${blogID}`, {
             headers: { 'Content-Type': 'application/json' }
         });
-        return response.data.blog; // Ensure your backend responds with 'blog'
+        console.log("response.data.blog", response.data.blog)
+        return response.data.blog; 
+        
     } catch (error) {
         throw error.response?.data || error.message;
     }
 }
+
+
 
 export async function getTop(amount) {
     try {
@@ -81,7 +101,7 @@ export async function create(blog, token) {
                 }
             }
         );
-        return  response.data.blog
+        return  response.data
     } catch (error) {
         throw error.response?.data || error.message;
     }

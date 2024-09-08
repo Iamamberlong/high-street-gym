@@ -32,7 +32,7 @@ const ClassCard = ({ gymClass, userRole, userID }) => {
   }
 
   return (
-    <div className=" flex flex-col class-card bg-white shadow-md rounded-lg p-4">
+    <div className=" flex flex-col class-card border border-gray-600 shadow-md rounded-lg p-4">
       <span className="class-list-data text-blue-800 text-xl">{activity_name}</span>
       <span className="class-list-data">{user_firstname} {user_lastname}</span>
       <span className="class-list-data text-blue-600">{location_name}</span>

@@ -77,13 +77,14 @@
 // ****** The above code works fine without a create blog button ****//
 
 // ****** The following code is for creating a new blog ****** //
+
 import { useEffect, useState } from "react";
 import * as Blogs from "../../api/blogs";
 import Header from "../../common/Header";
 import BlogCard from "./BlogCard";
 import { useAuthentication } from "../authentication";
 import { useNavigate } from "react-router-dom";
-import Footer from "../../common/Footer";
+import PageLayout from "../../common/PageLayout";
 
 export default function MyBlogsPage() {
   const [myBlogs, setMyBlogs] = useState([]);
@@ -127,8 +128,8 @@ export default function MyBlogsPage() {
   };
 
   return (
-    <>
-      <Header />
+    <PageLayout>
+    
       <div className="container p-2 mx-auto">
         <h2 className="text-center">My Blogs</h2>
         <div className="text-center mb-4">
@@ -155,7 +156,6 @@ export default function MyBlogsPage() {
           )}
         </div>
       </div>
-      <Footer />
-    </>
+    </PageLayout>
   );
 }

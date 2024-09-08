@@ -12,8 +12,8 @@
 <activity-upload operation="insert">
     <activities>
         <activity>
-            <name>High Jump Training</name>
-            <description>High Jump training is very good for your cardiology health..</description>
+            <name>Group HIIT Training</name>
+            <description>GROUP HIIT Training is very good for your cardiology health.</description>
             <duration>45min</duration>
         </activity>
         <!-- <activity> -->
@@ -35,18 +35,3 @@
         </activity> -->
     </activities>
 </activity-upload>
-
-<!-- Update version  -->
-<!-- <activity-upload operation="update">
-    <activities>
-        <activity>
-            <id>1</id>
-            <name>Hot Air Yoga </name>
-        </activity>
-        <activity>
-            <id>2</id>
-            <name>Indian Pilates</name>
-        </activity>
-
-    </activities>
-</activity-upload> -->

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import * as Blogs from "../../api/blogs";
-import Nav from "../../common/Nav";
+import PageLayout from "../../common/PageLayout";
 import { useAuthentication } from "../authentication"; // Import for user role
 
 export default function BlogContentPage() {
@@ -25,7 +25,7 @@ export default function BlogContentPage() {
         const fetchBlog = async () => {
             setLoading(true);
             try {
-                const fetchedBlog = await Blogs.getByID(id);
+                const fetchedBlog = await Blogs.getById(id);
                 setBlog(fetchedBlog);
                 setTitle(fetchedBlog.title);
                 setContent(fetchedBlog.content);
@@ -37,7 +37,7 @@ export default function BlogContentPage() {
         };
 
         fetchBlog();
-    }, [id, isEditing]); // Add `isEditing` as a dependency to refetch when it changes
+    }, [id]); // Add `isEditing` as a dependency to refetch when it changes
 
     const handleSave = async () => {
         try {
@@ -54,17 +54,17 @@ export default function BlogContentPage() {
 
 
     return (
-        <>
-            <Nav />
+        <PageLayout>
+            
             <div className="container mx-auto p-4">
-                <h2 className="text-3xl font-bold text-center mb-4">Blog Content</h2>
+    
                 {loading ? (
                     <p>Loading...</p>
                 ) : blog ? (
                     <div>
                         {isEditing ? (
                             // Show edit form if user has the required role
-                            (userRole === 'admin' || (userRole === 'member' && user.userID === blog.user_id)) && (
+                            (userRole === 'admin' || ((userRole === 'member'|| userRole === 'trainer') && user.userID === blog.user_id)) && (
                                 <div>
                                     <label className="block mb-2">
                                         Title:
@@ -102,15 +102,15 @@ export default function BlogContentPage() {
                                 <h3 className="text-2xl font-semibold mb-2">{blog.title}</h3>
                                 <p className="text-sm text-gray-600 mb-4">{blog.post_datetime}</p>
                                 <div>{blog.content}</div>
-                                {/* Show edit button if user has the required role */}
-                                {(userRole === 'admin' || (userRole === 'member' && user.userID === blog.user_id)) && (
+                        
+                                {/* {(userRole === 'admin' || ((userRole === 'member' || userRole === 'trainer') && user.userID === blog.user_id)) && (
                                     <button
                                         onClick={() => setIsEditing(true)}
                                         className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
                                     >
                                         Edit
                                     </button>
-                                )}
+                                )} */}
                             </div>
                         )}
                     </div>
@@ -118,7 +118,7 @@ export default function BlogContentPage() {
                     <p>Blog not found.</p>
                 )}
             </div>
-        </>
+        </PageLayout>
     );
 }
 

@@ -14,10 +14,10 @@ import { db_conn } from "../database.js";
 
 export function newActivity(id, name, description, duration) {
     return {
-        activity_id: id, 
-        activity_name: name,
-        activity_description: description, 
-        activity_duration: duration,
+       id, 
+        name,
+     description, 
+        duration,
     };
 }
 
@@ -84,9 +84,9 @@ export async function create(activity) {
         VALUES (?, ?, ?)
     `,
     [   
-        activity.activity_name,
-        activity.activity_description,
-        activity.activity_duration
+        activity.name,
+        activity.description,
+        activity.duration
     ]
     ).then(([result]) => {
         return {...activity, id: result.insertId}
@@ -101,4 +101,16 @@ export function deleteById(activityID) {
         WHERE activity_id = ?`,
         [activityID]
     )
+}
+
+export function update(activity) {
+    return db_conn.query(
+        `
+        UPDATE activities
+        SET activity_name = ?, 
+            activity_description = ?, 
+            activity_duration = ?
+        WHERE activity_id = ?`,
+        [activity.name, activity.description, activity.duration, activity.id]
+    );
 }

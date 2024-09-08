@@ -74,6 +74,28 @@ export function getById(classID) {
         })
 }
 
+export function getByTrainerIdAndDateTime(trainerID, classDateTime) {
+    return db_conn.query(
+        `SELECT * FROM classes WHERE class_trainer_user_id = ? AND class_datetime = ? AND class_removed = 0`,
+        [trainerID, classDateTime]
+    ).then(([queryResult]) => {
+        if (queryResult.length > 0) {
+            const result = queryResult[0];
+            return newClass(
+                result.class_id,
+                result.class_datetime,
+                result.class_location_id,
+                result.class_activity_id,
+                result.class_trainer_user_id,
+                result.class_removed
+            );
+        } else {
+            return Promise.reject("Trainer has no class at this date and time.");          
+        }
+    })
+}
+
+
 export function update(gymClass) {
     return db_conn.query(
         `

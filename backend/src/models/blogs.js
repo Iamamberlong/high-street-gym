@@ -20,7 +20,7 @@ export function newBlog(
 
 // get all blog posts.
 export function getAll() {
-    return db_conn.query("SELECT * FROM blog_posts WHERE archived = 0")
+    return db_conn.query("SELECT * FROM blog_posts WHERE archived = 0 ORDER BY post_datetime DESC")
         .then(([queryResult]) => {
             // convert each result into a model object
             return queryResult.map(

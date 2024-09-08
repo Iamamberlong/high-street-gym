@@ -9,19 +9,19 @@
     <!ELEMENT address (#PCDATA)>
     <!ELEMENT phone (#PCDATA)>
 ]>
+
 <location-upload operation="insert">
     <locations>
         <location>
-            <name>kelvin grove</name>
-            <address>69 Herston Road, kelvin grove</address>
+            <name>Kelvin Grove</name>
+            <address>69 Herston Road, Kelvin grove 4000</address>
             <phone>07 3457 9345</phone>
         </location>
-        <location>
+        <!-- <location>
             <name>Darra</name>
-            <address>72 Darra Station Road</address>
+            <address>72 Darra Station Road, Darra 4000</address>
             <phone>07 3728 4556</phone>
-            </location>
-
+        </location> -->
     </locations>
 </location-upload>
 

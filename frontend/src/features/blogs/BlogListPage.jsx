@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import * as Blogs from "../../api/blogs"
-import Header from "../../common/Header"
-import Footer from "../../common/Footer"
+import PageLayOut from "../../common/PageLayout"
 import { useAuthentication } from "../authentication"
 import BlogCard from "./BlogCard" // Import the BlogCard component
 
@@ -12,7 +11,6 @@ export default function BlogListPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
     const [user] = useAuthentication();
-   
 
     useEffect(() => {
         const fetchBlogs = async () => {
@@ -34,8 +32,8 @@ export default function BlogListPage() {
     }, [searchTerm]);
 
     return (
-        <>
-            <Header />
+    
+        <PageLayOut>
             <div className="container mx-auto p-4">
              
                 <div className="flex justify-center mb-4">
@@ -65,7 +63,7 @@ export default function BlogListPage() {
                     )}
                 </div>
             </div>
-            <Footer />
-        </>
+            </PageLayOut> 
+    
     );
 }

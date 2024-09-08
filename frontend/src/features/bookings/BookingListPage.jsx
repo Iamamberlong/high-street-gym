@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import * as Bookings from "../../api/bookings";
-import Nav from "../../common/Nav";
+import PageLayout from "../../common/PageLayout";
 import { XMLUploader } from "../xml/XMLUploader";
 import { RestrictedRoute } from "../../common/RestrictedRoute";
 import { useAuthentication } from "../authentication";
@@ -17,8 +17,9 @@ export default function BookingListPage() {
     const isAdmin = user && user.role === "admin";
 
     return (
+        <PageLayout>
         <RestrictedRoute allowedRoles={['admin']}>
-            <Nav />
+            
             <div className="container p-2 mx-auto grid grid-cols-1 md:grid-cols-2 gap-2">
                 <div className="rounded border-2 border-primary p-2">
                     <h2 className="text-center">All Bookings</h2>
@@ -59,6 +60,8 @@ export default function BookingListPage() {
                     </div>
                 )}
             </div>
+           
         </RestrictedRoute>
+        </PageLayout>
     );
 }

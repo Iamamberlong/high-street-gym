@@ -20,6 +20,7 @@ trainerController.get("/trainers", async (req, res) => {
             message: "Get all trainers",
             trainers: trainers
         });
+        console.log("trainers are: ", trainers)
     } catch (error) {
         console.error("Error fetching trainers:", error);
         res.status(500).json({ 

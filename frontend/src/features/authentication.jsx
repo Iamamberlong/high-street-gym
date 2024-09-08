@@ -18,12 +18,21 @@ export function AuthenticationProvider({ router, children }) {
             if (token) {
 
                 try {
-                    const decodedUser = jwtDecode(result.token)
-                    setAuthenticatedUser(decodedUser);
+                    const decodedUser = jwtDecode(token)
+                    const now = Date.now() / 1000
 
+                    if (decodedUser.exp < now) {
+                        localStorage.removeItem("jwtToken")
+                        setAuthenticatedUser(null)
+                        router.navigate("/")
+                    } else {
+                        setAuthenticatedUser({...decodedUser, token })
+                    }
+                    
                 } catch(error) {
                     console.error("Failed to fetch user")
-                    localStorage.removeItem("jwtToken");
+                    localStorage.removeItem("jwtToken")
+                    setAuthenticatedUser(null)
                     router.navigate("/");
                     };
             }
@@ -45,12 +54,14 @@ export function useAuthentication() {
         setAuthenticatedUser(null);
         try {
             const result = await apiLogin(email, password);
-            if (result.token) {
-                localStorage.setItem('jwtToken', result.token);
-                console.log("In the useAuthentication, token is: ", result.token)
-                const decodedUser = jwtDecode(result.token)
-                setAuthenticatedUser(decodedUser);
-                console.log("The decodedUser is: ", decodedUser)
+            if (result.user) {
+                localStorage.setItem('jwtToken', result.user.token);
+                console.log("Token stored in localStorage:", result.user.token);
+
+                const decodedUser = jwtDecode(result.user.token)
+                setAuthenticatedUser({ ...decodedUser, token: result.user.token });
+                console.log("The decodedUser is: ", { ...decodedUser, token: result.user.token })
+
                 return Promise.resolve(result.message);
             } else {
                 return Promise.reject(result.message);
@@ -77,10 +88,11 @@ export function useAuthentication() {
 
     async function refresh() {
         const token = localStorage.getItem('jwtToken');
-        if (authenticatedUser && token) {
+        if (token) {
             try {
-                const decodedUser = jwtDecode(result.token)
-                setAuthenticatedUser(decodedUser);
+                const decodedUser = jwtDecode(token)
+                setAuthenticatedUser({ ...decodedUser, token });
+                console.log("User refreshed with token: ", { ...decodedUser, token })
 
                 return Promise.resolve('User refreshed');
             } catch (error) {

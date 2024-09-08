@@ -20,13 +20,13 @@ export default function Nav() {
 
   return (
     <div className="w-full flex flex-col justify-between bg-gray-600 text-white py-4 items-center md:flex-row md:items-baseline">
-      <Link to="/" className="flex items-center">
+      {/* <Link to="/" className="hidden md:flex items-center ml-5">
         <img
           src={logo}
           alt="High Street Gym Logo"
           className="h-10 w-auto mt-5 ml-5"
         />
-      </Link>
+      </Link> */}
       <div className="navbar flex md:justify-start">
         <ul className="menu md:menu-horizontal px-1 w-full">
           {/* Common links for all users */}
@@ -54,33 +54,23 @@ export default function Nav() {
             <>
               {/* Common links for logged-in users */}
               
-              <li className="text-gray-500">
+              <li className="text-blue-500">
                 Hello, {user.firstName}!
-            
               </li>
-        
-              
+          
+              <li>
+              <Link to="/my-profile">My Profile</Link>
+              </li>
 
               {/* Additional links based on user role */}
               {user.role === "admin" && (
                 <>
+
+                  {/* <li>
+                    <Link to="/upload">Upload</Link>
+                  </li> */}
                   <li>
-                    <Link to="/manage-users">Manage Users</Link>
-                  </li>
-                  <li>
-                    <Link to="/manage-classes">Manage Classes</Link>
-                  </li>
-                  <li>
-                    <Link to="/manage-bookings">Manage Bookings</Link>
-                  </li>
-                  <li>
-                    <Link to="/manage-activities">Manage Activities</Link>
-                  </li>
-                  <li>
-                    <Link to="/manage-locations">Manage Locations</Link>
-                  </li>
-                  <li>
-                    <Link to="/manage-blogs">Manage Blogs</Link>
+                    <Link to="/create-class">Create Class</Link>
                   </li>
                   <li>
                     <Link to="/blogs/my-blogs">My Blogs</Link>
@@ -94,6 +84,9 @@ export default function Nav() {
                   </li>
                   <li>
                     <Link to="/blogs/my-blogs">My Blogs</Link>
+                  </li>
+                  <li>
+                    <Link to="/create-class">Create Class</Link>
                   </li>
                 </>
               )}

@@ -1,7 +1,7 @@
 import { useRef, useState } from "react"
 import { API_URL } from "../../api/api"
 import { useAuthentication } from "../authentication"
-import axios from "axios"
+
 
 export function XMLUploader({ onUploadSuccess, uploadUrl, disabled = false }) {
     const [user] = useAuthentication()
@@ -52,24 +52,30 @@ export function XMLUploader({ onUploadSuccess, uploadUrl, disabled = false }) {
            
     
 
-    return <div>
-        <form className="flex-grow m-4 max-w-2xl" onSubmit={uploadFile} >
-            <div className="form-control">
-                <label className="label">
-                    <span className="label-text">XML File Import</span>
-                </label>
-                <div className="flex gap-2">
+    return (
+        <div className="mb-6 border p-4 rounded-md shadow-sm">
+            <form className="flex flex-col m-4 max-w-2xl" onSubmit={uploadFile}>
+                <div className="form-control">
+                    <label className="label">
+                        <span className="label-text">XML File Import</span>
+                    </label>
                     <input
                         ref={uploadInputRef}
                         type="file"
                         disabled={disabled}
-                        className="file-input file-input-bordered file-input-primary" />
-                    <button disabled={disabled} className="btn btn-primary mr-2" >Upload</button>
+                        className="file-input file-input-bordered file-input-primary mb-2"
+                    />
+                    <button
+                        disabled={disabled}
+                        className="btn btn-primary"
+                    >
+                        Upload
+                    </button>
+                    <label className="label mt-2">
+                        <span className="label-text-alt">{statusMessage}</span>
+                    </label>
                 </div>
-                <label className="label">
-                    <span className="label-text-alt">{statusMessage}</span>
-                </label>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
+    )
 }

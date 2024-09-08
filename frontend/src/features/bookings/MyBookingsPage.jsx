@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import * as Bookings from "../../api/bookings";
-import Header from "../../common/Header";
+import PageLayout from "../../common/PageLayout";
 import BookingCard from "./BookingCard";
 import { useAuthentication } from "../authentication";
 import { useNavigate } from "react-router-dom";
@@ -44,8 +44,8 @@ export default function MyBookingsPage() {
   };
 
   return (
-    <>
-      <Header />
+    <PageLayout>
+     
       <div className="classes-container p-4">
         <h2 className="text-2xl font-bold mb-4">My Bookings</h2>
         {message && (
@@ -68,8 +68,8 @@ export default function MyBookingsPage() {
           )}
         </div>
       </div>
-      <Footer />
-    </>
+
+    </PageLayout>
   );
 }
 

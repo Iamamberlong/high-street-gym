@@ -6,6 +6,16 @@ export default function BlogCard({ blogPost, onEdit, onDelete, userRole }) {
     // Safely check if userRole is defined
     const isAdminOrAuthorized = ['admin', 'member', 'trainer'].includes(userRole);
 
+    const formatDateTime = (dateString) => {
+        const date = new Date(dateString); // Convert string to Date object
+      
+        // Extract date and time separately
+        const formattedDate = date.toISOString().split('T')[0]; // '2024-04-25'
+        const formattedTime = date.toTimeString().split(' ')[0]; // '08:48:29'
+      
+        return `${formattedDate} ${formattedTime}`; // Combine date and time
+      };
+
     return (
         <div className="shadow-md rounded-lg overflow-hidden mb-4">
             <div className="p-4">
@@ -37,7 +47,7 @@ export default function BlogCard({ blogPost, onEdit, onDelete, userRole }) {
                 )}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-gray-600 text-sm">
                     <p className="flex-1 mb-2 sm:mb-0">{blogPost.firstname}</p>
-                    <p className="flex-1 text-right">{blogPost.post_datetime}</p>
+                    <p className="flex-1 text-right">{formatDateTime(blogPost.post_datetime)}</p>
                 </div>
             </div>
         </div>

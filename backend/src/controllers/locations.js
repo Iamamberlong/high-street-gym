@@ -78,10 +78,12 @@ locationController.post("/locations/upload-xml", auth(["admin"]), (req, res) => 
                 // Slightly painful indexing to reach nested children
                 const locationsData = locationUpload["locations"][0]["location"]
 
+                console.log("locationsData looks like: ", locationsData)
+
                 if (operation == "insert") {
                     Promise.all(locationsData.map((locationData) => {
                         // Convert the xml object into a model object
-                        const locationModel = Locations.newLocation(null, locationData.name.toString())
+                        const locationModel = Locations.newLocation(null, locationData.name.toString(), locationData.address.toString(), locationData.phone.toString())
                         // Return the promise of each creation query
                         return Locations.create(locationModel)
                     })).then(results => {
@@ -98,9 +100,11 @@ locationController.post("/locations/upload-xml", auth(["admin"]), (req, res) => 
                 } else if (operation == "update") {
                     Promise.all(locationsData.map((locationData) => {
                         // Convert the xml object into a model object
-                        const locationModel = newLocation(
+                        const locationModel = Locations.newLocation(
                             locationData.id.toString(),
-                            locationData.name.toString()
+                            locationData.name.toString(),
+                            locationData.address.toString(),
+                            locationData.phone.toString()
                         )
                         // Return the promise of each creation query
                         return Locations.update(locationModel)

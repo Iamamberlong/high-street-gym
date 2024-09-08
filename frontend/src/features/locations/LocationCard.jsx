@@ -108,7 +108,7 @@ function LocationCard({ name, address, contactNumber }) {
   }, [coordinates, name, address, contactNumber])
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="bg-gray rounded-lg shadow-md overflow-hidden">
       <div className="p-4">
         <h2 className="text-xl font-bold mb-2">{name}</h2>
         <p className="text-gray-600 mb-2">{address}</p>

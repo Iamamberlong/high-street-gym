@@ -17,7 +17,7 @@ export async function login(email, password) {
 }
 
 export async function logout() {
-    const token = getAuthToken();
+    const token = localStorage.getItem('jwtToken');
     console.log('API logout called with token:', token);
     try {
         const response = await axios.post(
@@ -30,15 +30,15 @@ export async function logout() {
                 }
             }
         );
-        return response.data;
         console.log("response.data is: ",  response.data)
+        return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
     }
 }
 
 export async function getAllUsers() {
-    const token = getAuthToken();
+    const token = localStorage.getItem('jwtToken');
     try {
         const response = await axios.get(
             `${API_URL}/users`,
@@ -56,7 +56,7 @@ export async function getAllUsers() {
 }
 
 export async function getUserById(userID) {
-    const token = getAuthToken();
+    const token = localStorage.getItem('jwtToken');
     try {
         const response = await axios.get(
             `${API_URL}/users/${userID}`,
@@ -76,7 +76,7 @@ export async function getUserById(userID) {
 
 
 export async function update(user) {
-    const token = getAuthToken();
+    const token = localStorage.getItem('jwtToken');
     try {
         const response = await axios.patch(
             `${API_URL}/users/${user.id}`,
@@ -88,6 +88,7 @@ export async function update(user) {
                 }
             }
         );
+        console.log("response.data", response.data)
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
@@ -95,7 +96,7 @@ export async function update(user) {
 }
 
 export async function create(user) {
-    const token = getAuthToken();
+    const token = localStorage.getItem('jwtToken');
     try {
         const response = await axios.post(
             `${API_URL}/users`,
@@ -109,12 +110,16 @@ export async function create(user) {
         );
         return response.data;
     } catch (error) {
-        throw error.response?.data || error.message;
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data.message || error.message)
+        } else {
+            throw new Error(error.message || " An unexpected error occurred.")
+        }      
     }
 }
 
 export async function deleteByID(userID) {
-    const token = getAuthToken();
+    const token = localStorage.getItem('jwtToken');
     try {
         const response = await axios.delete(
             `${API_URL}/users/${userID}`,
@@ -145,7 +150,7 @@ export async function registerUser(user) {
 }
 
 export async function getUserByRole(role) {
-    const token = getAuthToken();
+    const token = localStorage.getItem('jwtToken');
     try {
         const response = await axios.get(
             `${API_URL}/users/role/${role}`,
