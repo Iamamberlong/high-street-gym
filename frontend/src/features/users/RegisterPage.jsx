@@ -161,18 +161,18 @@ export default function RegisterPage() {
     <PageLayout>
       <div className="flex items-center justify-center min-h-screen">
         <div className="p-10 rounded-lg shadow-2xl max-w-md w-full">
-          <h1 className="text-3xl font-extrabold text-center text-blue-800 mb-6">
+          <h1 className="text-2xl font-bold text-center mb-6">
             Register
           </h1>
           <form onSubmit={onRegisterSubmit} className="space-y-5">
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text text-base text-gray-800">Email</span>
               </label>
               <input
                 type="text"
                 placeholder="Enter your email"
-                className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input input-bordered shadow-md bg-white w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
@@ -187,12 +187,12 @@ export default function RegisterPage() {
             </div>
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text text-base text-gray-800">Password</span>
               </label>
               <input
                 type="password"
                 placeholder="Enter your password"
-                className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input input-bordered shadow-md bg-white w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.password}
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
@@ -204,12 +204,12 @@ export default function RegisterPage() {
             </div>
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">First Name</span>
+                <span className="label-text text-base text-gray-800">First Name</span>
               </label>
               <input
                 type="text"
                 placeholder="Enter your first name"
-                className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input input-bordered shadow-md bg-white w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.firstName}
                 onChange={(e) =>
                   setFormData({ ...formData, firstName: e.target.value })
@@ -222,12 +222,12 @@ export default function RegisterPage() {
             </div>
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Last Name</span>
+                <span className="label-text text-base text-gray-800">Last Name</span>
               </label>
               <input
                 type="text"
                 placeholder="Enter your last name"
-                className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input input-bordered shadow-md bg-white w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.lastName}
                 onChange={(e) =>
                   setFormData({ ...formData, lastName: e.target.value })
@@ -240,12 +240,12 @@ export default function RegisterPage() {
             </div>
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Phone Number</span>
+                <span className="label-text text-base text-gray-800">Phone Number</span>
               </label>
               <input
                 type="text"
                 placeholder="Enter your phone number"
-                className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input input-bordered w-full shadow-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.phoneNumber}
                 onChange={(e) =>
                   setFormData({ ...formData, phoneNumber: e.target.value })
@@ -258,12 +258,12 @@ export default function RegisterPage() {
             </div>
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Unit Number</span>
+                <span className="label-text text-base text-gray-800">Unit Number</span>
               </label>
               <input
                 type="number"
                 placeholder="Enter your unit number"
-                className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input input-bordered shadow-md bg-white w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.unitNumber}
                 onChange={(e) =>
                   setFormData({ ...formData, unitNumber: e.target.value })
@@ -276,12 +276,12 @@ export default function RegisterPage() {
             </div>
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Street Number</span>
+                <span className="label-text text-base text-gray-800">Street Number</span>
               </label>
               <input
                 type="number"
                 placeholder="Enter your street number"
-                className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input input-bordered w-full shadow-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.streetNumber}
                 onChange={(e) =>
                   setFormData({ ...formData, streetNumber: e.target.value })
@@ -294,12 +294,12 @@ export default function RegisterPage() {
             </div>
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Street Name</span>
+                <span className="label-text text-base text-gray-800">Street Name</span>
               </label>
               <input
                 type="text"
                 placeholder="Enter your street name"
-                className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input input-bordered w-full shadow-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.streetName}
                 onChange={(e) =>
                   setFormData({ ...formData, streetName: e.target.value })
@@ -312,10 +312,10 @@ export default function RegisterPage() {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Street Type</span>
+                <span className="label-text text-base text-gray-800">Street Type</span>
               </label>
               <select
-                className="select select-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="select select-bordered w-full shadow-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.streetType}
                 onChange={(e) =>
                   setFormData({ ...formData, streetType: e.target.value })
@@ -332,12 +332,12 @@ export default function RegisterPage() {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Suburb</span>
+                <span className="label-text text-base text-gray-800">Suburb</span>
               </label>
               <input
                 type="text"
                 placeholder="Enter your suburb"
-                className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input input-bordered w-full shadow-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.suburb}
                 onChange={(e) =>
                   setFormData({ ...formData, suburb: e.target.value })
@@ -350,12 +350,12 @@ export default function RegisterPage() {
             </div>
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Postcode</span>
+                <span className="label-text text-base text-gray-800">Postcode</span>
               </label>
               <input
                 type="text"
                 placeholder="Enter your postcode"
-                className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input input-bordered w-full shadow-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.postcode}
                 onChange={(e) =>
                   setFormData({ ...formData, postcode: e.target.value })
@@ -366,12 +366,12 @@ export default function RegisterPage() {
               )}
             </div>
             <div className="mt-6">
-              <button type="submit" className="btn btn-primary w-full">
+              <button type="submit" className="btn btn-primary bg-teal-500 border-0 w-full">
                 Register
               </button>
             </div>
             {statusMessage && (
-              <span className="mt-4 text-center text-red-500">
+              <span className={`mt-4 text-center ${statusMessage.includes("success") ? "text-green-500" : "text-red-500"}`}>
                 {statusMessage}
               </span>
             )}

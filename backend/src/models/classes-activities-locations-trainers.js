@@ -51,6 +51,7 @@ export function getAll() {
     ON classes.class_activity_id = activities.activity_id
     INNER JOIN users
     ON classes.class_trainer_user_id = users.user_id WHERE classes.class_removed = 0
+    ORDER BY class_datetime ASC
     `)
         .then(([queryResult]) => {
             // convert each result into a model object
@@ -73,48 +74,7 @@ export function getAll() {
         })
 }
 
-// export function getAll() {
-//     return db_conn.query(`
-//     SELECT 
-//     classes.class_id as class_id, 
-//     classes.class_datetime as class_datetime,
-//     classes.class_location_id as class_location_id,
-//     locations.location_name as location_name,
-//     classes.class_activity_id as class_activity_id,
-//     activities.activity_name as activity_name,
-//     activities.activity_description as activity_description,
-//     activities.activity_duration as activity_duration,
-//     classes.class_trainer_user_id as trainer_user_id,
-//     users.user_firstname as trainer_firstname,
-//     users.user_lastname as trainer_lastname
-//     FROM classes
-//     INNER JOIN locations
-//     ON classes.class_location_id = locations.location_id
-//     INNER JOIN activities
-//     ON classes.class_activity_id = activities.activity_id
-//     INNER JOIN users
-//     ON classes.class_trainer_user_id = users.user_id
-//     `)
-//         .then(([queryResult]) => {
-//             // convert each result into a model object
-//             return queryResult.map(
-//                 result => newClassActivityLocationTrainer(
-//                     result.class_id,
-//                     result.class_datetime,
-//                     result.class_location_id,
-//                     result.location_name,
-//                     result.class_activity_id,
-//                     result.activity_name,
-//                     result.activity_description,
-//                     result.activity_duration,
-//                     result.class_trainer_user_id,
-//                     result.user_firstname,
-//                     result.user_lastname
 
-//                 )
-//             )
-//         })
-// }
 
 // get classes by location name
 
@@ -190,6 +150,51 @@ export function getById(classID) {
 }
 
 
+// get classes by className and classDate
+export function getByClassNameAndDate(className, classDate) {
+    return db_conn.query(`
+    SELECT 
+        classes.*,
+        locations.location_name,
+        activities.activity_name,
+        activities.activity_description,
+        activities.activity_duration,
+        users.user_firstname,
+        users.user_lastname
+    FROM classes
+    INNER JOIN locations
+        ON classes.class_location_id = locations.location_id
+    INNER JOIN activities
+        ON classes.class_activity_id = activities.activity_id
+    INNER JOIN users
+        ON classes.class_trainer_user_id = users.user_id
+    WHERE activities.activity_name = ?
+    AND DATE(classes.class_datetime) = ?
+    AND classes.class_removed = 0
+    `, [className, classDate])
+    .then(([queryResult]) => {
+        // Convert each result into a model object
+        if (queryResult.length > 0) {
+            return queryResult.map(result => new newClassActivityLocationTrainer(
+                result.class_id,
+                result.class_datetime,
+                result.class_location_id,
+                result.location_name,
+                result.class_activity_id,
+                result.activity_name,
+                result.activity_description,
+                result.activity_duration,
+                result.class_trainer_user_id,
+                result.user_firstname,
+                result.user_lastname
+            ));
+        } else {
+            return Promise.reject("No matching results.");
+        }
+    });
+}
+
+
 
 // get classes using trainerID
 export function getAllByTrainerId(trainerID) {
@@ -214,6 +219,7 @@ export function getAllByTrainerId(trainerID) {
     INNER JOIN users
     ON classes.class_trainer_user_id = users.user_id
     WHERE class_trainer_user_id = ? AND classes.class_removed = 0
+    ORDER BY classes.class_datetime DESC
     `, [trainerID]).then(([queryResult]) => {
         return queryResult.map(result => 
             newClassActivityLocationTrainer(
@@ -294,6 +300,7 @@ export function getAllByDateRange(startDate, endDate) {
         INNER JOIN users
         ON classes.class_trainer_user_id = users.user_id
         WHERE DATE(class_datetime) BETWEEN ? AND ? AND classes.class_removed = 0
+        ORDER BY class_datetime ASC
         `,
         [startDate, endDate]
     ).then(([queryResult]) => {

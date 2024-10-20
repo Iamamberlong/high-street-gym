@@ -20,6 +20,15 @@ export function XMLUploader({ onUploadSuccess, uploadUrl, disabled = false }) {
         // we choose to upload only the first selected file in this case.
         const file = uploadInputRef.current.files[0];
 
+        if (!file) {
+            setStatusMessage("No file selected. Please select an XML file.")
+            return 
+        }
+
+        if (file.type !=="text/xml" && file.type !== "application/xml") {
+           setStatusMessage("Invalid file type. Please upload a valid XML file.") 
+        }
+
         // Fetch expects multi-part form data to be provided
         // inside a FormData object.  
         const formData = new FormData()
@@ -55,24 +64,24 @@ export function XMLUploader({ onUploadSuccess, uploadUrl, disabled = false }) {
     return (
         <div className="mb-6 border p-4 rounded-md shadow-sm">
             <form className="flex flex-col m-4 max-w-2xl" onSubmit={uploadFile}>
-                <div className="form-control">
+                <div className="form-control flex justify-center">
                     <label className="label">
-                        <span className="label-text">XML File Import</span>
+                        <span className="label-text text-bold text-gray-800">XML File Import</span>
                     </label>
                     <input
                         ref={uploadInputRef}
                         type="file"
                         disabled={disabled}
-                        className="file-input file-input-bordered file-input-primary mb-2"
+                        className="file-input file-input-bordered file-input-primary mb-2 bg-white "
                     />
                     <button
                         disabled={disabled}
-                        className="btn btn-primary"
+                        className="btn btn-primary bg-blue-500 text-base text-white"
                     >
                         Upload
                     </button>
                     <label className="label mt-2">
-                        <span className="label-text-alt">{statusMessage}</span>
+                        <span className="text-red-500 text-sm">{statusMessage}</span>
                     </label>
                 </div>
             </form>

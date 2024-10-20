@@ -13,15 +13,10 @@
 <location-upload operation="insert">
     <locations>
         <location>
-            <name>Kelvin Grove</name>
-            <address>69 Herston Road, Kelvin grove 4000</address>
+            <name>Test</name>
+            <address>221 Gooderham Raod, Willawong 4110</address>
             <phone>07 3457 9345</phone>
         </location>
-        <!-- <location>
-            <name>Darra</name>
-            <address>72 Darra Station Road, Darra 4000</address>
-            <phone>07 3728 4556</phone>
-        </location> -->
     </locations>
 </location-upload>
 

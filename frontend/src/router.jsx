@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { RestrictedRoute } from "./common/RestrictedRoute";
 import ClassListPage from "./features/classes/ClassListPage";
+import ClassFilterPage from "./features/classes/ClassFilterPage";
 import LoginPage from "./features/users/LoginPage";
 import RegisterPage from "./features/users/RegisterPage";
 import BookingListPage from "./features/bookings/BookingListPage";
@@ -15,11 +16,12 @@ import HomePage from "./features/homepage/HomePage";
 import BlogContentPage from "./features/blogs/BlogContentPage"; // 
 import ManageUsersPage from "./features/users/ManageUsers";
 import TrainerListPage from "./features/users/TrainerListPage";
-import ManageClassPage from "./features/classes/ManageClassesPage";
+import MyClassesPage from "./features/classes/MyClassesPage";
 import CreateBlogPage from "./features/blogs/CreateBlogPage";
 import EditBlogPage from "./features/blogs/EditBlogPage"
 import CreateClassPage from "./features/classes/CreateClassPage"
 import UpLoadPage from "./features/users/UpLoadPage";
+import TrainerClassCard from "./features/classes/TrainerClassCard";
 
 
 
@@ -33,7 +35,7 @@ const router = createBrowserRouter([
         element: <LoginPage />
     },
     {
-        path: "/my-profile",
+        path: "/users/:userID",
         element: <RestrictedRoute allowedRoles={["admin", "member", "trainer"]}>
         <MyProfilePage />
     </RestrictedRoute>
@@ -69,9 +71,13 @@ const router = createBrowserRouter([
         element: <ClassListPage />    
     },
     {
-        path: "/manage-classes",
-        element: <RestrictedRoute allowedRoles={["admin"]}>
-            <ManageClassPage />
+        path: "/classes/:gymClassName/:classDate",
+        element: <ClassFilterPage />
+    },
+    {
+        path: "/classes/my-classes",
+        element: <RestrictedRoute allowedRoles={["admin", "trainer"]}>
+            <MyClassesPage />
         </RestrictedRoute>
     },
     {
@@ -105,6 +111,10 @@ const router = createBrowserRouter([
         element: <RestrictedRoute allowedRoles={["admin", "member", "trainer"]}>
             <MyBookingsPage />
         </RestrictedRoute>
+    },
+    {
+        path: "/bookings/:classId",
+        element: <TrainerClassCard />
     },
     {
         path: "/blogs/my-blogs",

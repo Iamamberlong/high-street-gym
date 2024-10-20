@@ -19,7 +19,7 @@ export default function Nav() {
   }
 
   return (
-    <div className="w-full flex flex-col justify-between bg-gray-600 text-white py-4 items-center md:flex-row md:items-baseline">
+    <div className="w-full flex flex-col justify-between bg-teal-500 text-white py-4 items-center md:flex-row md:items-baseline">
       {/* <Link to="/" className="hidden md:flex items-center ml-5">
         <img
           src={logo}
@@ -28,7 +28,7 @@ export default function Nav() {
         />
       </Link> */}
       <div className="navbar flex md:justify-start">
-        <ul className="menu md:menu-horizontal px-1 w-full">
+        <ul className="menu md:menu-horizontal px-1 w-full text-lg">
           {/* Common links for all users */}
           <li>
             <Link to="/activities">Activities</Link>
@@ -54,21 +54,16 @@ export default function Nav() {
             <>
               {/* Common links for logged-in users */}
               
-              <li className="text-blue-500">
+              <li className="text-yellow-300">
                 Hello, {user.firstName}!
               </li>
           
               <li>
-              <Link to="/my-profile">My Profile</Link>
+              <Link to={`/users/${user.userID}`}>My Profile</Link>
               </li>
 
-              {/* Additional links based on user role */}
               {user.role === "admin" && (
                 <>
-
-                  {/* <li>
-                    <Link to="/upload">Upload</Link>
-                  </li> */}
                   <li>
                     <Link to="/create-class">Create Class</Link>
                   </li>
@@ -80,7 +75,7 @@ export default function Nav() {
               {user.role === "trainer" && (
                 <>
                   <li>
-                    <Link to="/my-classes">My Classes</Link>
+                    <Link to='/classes/my-classes'>My Classes</Link>
                   </li>
                   <li>
                     <Link to="/blogs/my-blogs">My Blogs</Link>

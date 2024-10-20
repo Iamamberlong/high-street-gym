@@ -8,6 +8,8 @@ import { useAuthentication } from "../authentication"; // Import your authentica
 
 const CreateClassPage = () => {
     const [statusMessage, setStatusMessage] = useState("")
+    const [user] = useAuthentication()
+    console.log("user is: ", user)
 
     const handleClassAdded = () => {
         setStatusMessage("")
@@ -15,8 +17,6 @@ const CreateClassPage = () => {
 
     return (
         <PageLayout>
-       
-   
             <h1 className="text-2xl font-bold mb-4 text-center">Create a New Gym Class</h1>
             <ClassCreate onAdded={handleClassAdded} />
             {statusMessage && <p className="mt-2 text-green-500">{statusMessage}</p>}

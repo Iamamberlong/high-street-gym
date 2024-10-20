@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Main = ({ children }) => (
-  <main className="flex-grow p-4">
+  <main className="flex-grow bg-white text-gray-800 p-4">
     {children}
   </main>
 );

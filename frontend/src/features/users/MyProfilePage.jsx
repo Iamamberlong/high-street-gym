@@ -9,6 +9,8 @@ import PageLayout from "../../common/PageLayout";
 export default function MyProfilePage() {
   const navigate = useNavigate();
   const [user, login, logout] = useAuthentication();
+  const [userID, setUserID] = useState(null)
+  console.log("user from useAuthentication: ", user)
 
   const [statusMessage, setStatusMessage] = useState("");
   const [initialData, setInitialData] = useState({});
@@ -28,6 +30,8 @@ export default function MyProfilePage() {
     suburb: "",
     postcode: "",
   });
+
+  
 
   const streetTypes = [
     "Street",
@@ -65,7 +69,15 @@ export default function MyProfilePage() {
   });
 
   useEffect(() => {
+    console.log("user in the useEffect: ", user)
+
+    setUserID(user.userID)
     // Fetch the user profile data
+    if (!user || !user.userID) {
+      setStatusMessage("User is not defined.")
+      return 
+    }
+
     Users.getUserById(user.userID).then((profileData) => {
       const extractedAddress = extractAddressComponents(profileData.address);
 
@@ -75,7 +87,8 @@ export default function MyProfilePage() {
       };
 
       setFormData(initialProfileData);
-      setInitialData(initialProfileData); // Set initial data for reset
+      setInitialData(initialProfileData); 
+      setInitialPassword(profileData.password)// Set initial data for reset
     });
   }, [user.userID]);
 
@@ -218,9 +231,12 @@ export default function MyProfilePage() {
       valid = false;
     }
 
-    if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters long";
-      valid = false;
+    if (formData.password) {
+      if (formData.password.length < 6) {
+        newErrors.password = "Password must be at least 6 characters long";
+        valid = false;
+    }
+    
     }
 
     if (!/^[a-zA-Z\s\-]+$/.test(formData.firstname)) {
@@ -278,10 +294,12 @@ export default function MyProfilePage() {
     e.preventDefault();
     setStatusMessage("");
 
+    console.log("userID is: ", userID)
+
     if (!validateForm()) {
       setStatusMessage("Please correct the errors above");
       return;
-    }
+    }  
 
     setStatusMessage("Updating...");
 
@@ -294,8 +312,14 @@ export default function MyProfilePage() {
       }`,
     };
 
-    Users.update(updatedProfileData)
+    if (formData.password) {
+      updatedProfileData.password = formData.password
+    }
+
+    console.log("userID above update function is: ", userID)
+    Users.update(updatedProfileData, userID)
       .then((result) => {
+        console.log("Update result:", result);
         if (result.status === 200) {
           setStatusMessage("Profile updated successfully.");
           setIsSuccess(true);
@@ -311,7 +335,8 @@ export default function MyProfilePage() {
       })
       .catch((err) => {
         console.error("Error updating profile:", err);
-        setStatusMessage("An error occurred while saving.");
+        console.log("err: ", err)
+        setStatusMessage(err.error);
         setIsSuccess(false);
       });
   }
@@ -335,22 +360,22 @@ export default function MyProfilePage() {
 
   return (
     <PageLayout>
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br">
+      <div className="flex items-center justify-center min-h-screen bg-slate-100 bg-gradient-to-br">
         <div className="p-10 rounded-lg shadow-2xl max-w-md w-full">
-          <h1 className="text-3xl font-extrabold text-center text-blue-800 mb-6">
+          <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
             My Profile
           </h1>
           <form onSubmit={handleSave} className="space-y-5">
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text text-base text-gray-800">Email</span>
               </label>
               <input
                 type="text"
                 name="email"
                 pattern="^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$"
                 title="Invalid email format."
-                className="input input-bordered w-full"
+                className="input input-bordered w-full border-md bg-white"
                 value={formData.email}
                 onChange={handleInputChange}
                 required
@@ -361,29 +386,28 @@ export default function MyProfilePage() {
             </div>
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text text-base text-gray-800">Password</span>
               </label>
               <input
                 type="password"
                 name="password"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full border-md bg-white"
                 value={formData.password}
                 onChange={handleInputChange}
-                required
               />
               {errors.password && (
                 <p className="text-red-500 text-xs">{errors.password}</p>
               )}
             </div>
 
-            <div className="form-control w-full">
+            <div className="form-control w-full ">
               <label className="label">
-                <span className="label-text">First Name</span>
+                <span className="label-text text-base text-gray-800">First Name</span>
               </label>
               <input
                 type="text"
                 name="firstname"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full border-md bg-white"
                 value={formData.firstname}
                 onChange={handleInputChange}
                 required
@@ -395,13 +419,13 @@ export default function MyProfilePage() {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Last Name</span>
+                <span className="label-text text-base text-gray-800">Last Name</span>
               </label>
               <input
                 type="text"
                 name="lastname"
                 // className="input input-bordered w-full"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full border-md bg-white"
                 value={formData.lastname}
                 onChange={handleInputChange}
                 required
@@ -413,12 +437,12 @@ export default function MyProfilePage() {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Phone Number</span>
+                <span className="label-text text-base text-gray-800">Phone Number</span>
               </label>
               <input
                 type="text"
                 name="phone"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full border-md bg-white"
                 value={formData.phone}
                 onChange={handleInputChange}
                 required
@@ -430,12 +454,12 @@ export default function MyProfilePage() {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Unit Number</span>
+                <span className="label-text text-base text-gray-800">Unit Number</span>
               </label>
               <input
                 type="text"
                 name="unitNumber"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full border-md bg-white"
                 value={formData.unitNumber}
                 onChange={handleInputChange}
               />
@@ -446,12 +470,12 @@ export default function MyProfilePage() {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Street Number</span>
+                <span className="label-text text-base text-gray-800">Street Number</span>
               </label>
               <input
                 type="text"
                 name="streetNumber"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full border-md bg-white"
                 value={formData.streetNumber}
                 onChange={handleInputChange}
               />
@@ -462,12 +486,12 @@ export default function MyProfilePage() {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Street Name</span>
+                <span className="label-text text-base text-gray-800">Street Name</span>
               </label>
               <input
                 type="text"
                 name="streetName"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full border-md bg-white"
                 value={formData.streetName}
                 onChange={handleInputChange}
               />
@@ -478,10 +502,10 @@ export default function MyProfilePage() {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Street Type</span>
+                <span className="label-text text-base text-gray-800">Street Type</span>
               </label>
               <select
-                className="select select-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="select select-bordered w-full border-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.streetType}
                 onChange={(e) =>
                   setFormData({ ...formData, streetType: e.target.value })
@@ -498,12 +522,12 @@ export default function MyProfilePage() {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Suburb</span>
+                <span className="label-text text-base text-gray-800">Suburb</span>
               </label>
               <input
                 type="text"
                 name="suburb"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full border-md bg-white"
                 value={formData.suburb}
                 onChange={handleInputChange}
               />
@@ -514,12 +538,12 @@ export default function MyProfilePage() {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Post Code</span>
+                <span className="label-text text-base text-gray-800">Post Code</span>
               </label>
               <input
                 type="text"
                 name="postcode"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full border-md bg-white"
                 value={formData.postcode}
                 onChange={handleInputChange}
               />
@@ -529,12 +553,12 @@ export default function MyProfilePage() {
             </div>
 
             <div className="mt-6 flex justify-between">
-              <button type="submit" className="btn btn-primary w-1/2 mr-2">
+              <button type="submit" className="btn btn-primary w-1/2 mr-2 mt-8 bg-blue-500 text-base text-white">
                 Save
               </button>
               <button
                 type="button"
-                className="btn btn-secondary w-1/2"
+                className="btn btn-secondary w-1/2 mt-8 bg-violet-400 border-0 text-base text-white"
                 onClick={handleCancel}
               >
                 Cancel

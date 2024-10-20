@@ -353,3 +353,61 @@ export function getBySearch(searchTerm) {
 
     })
 }
+
+
+export function getMembersByClassId(classId) {
+    return db_conn.query(`
+        SELECT 
+        b.booking_id as booking_id,
+        m.user_id as member_id,
+        c.class_id as class_id, 
+        b.booking_created_datetime as booking_created_datetime,
+        c.class_datetime as class_datetime, 
+        l.location_id as location_id,
+        l.location_name as location_name,
+        a.activity_id as activity_id,
+        a.activity_name as activity_name,
+        c.class_trainer_user_id as trainer_id,
+        t.user_firstname AS trainer_firstname,
+        t.user_lastname AS trainer_lastname,
+        m.user_firstname AS member_firstname,
+        m.user_lastname AS member_lastname
+        FROM bookings b
+        INNER JOIN classes c
+        ON c.class_id = b.booking_class_id
+        INNER JOIN users m
+        ON b.booking_user_id = m.user_id AND m.user_role = 'member'
+        INNER JOIN users t
+        ON c.class_trainer_user_id = t.user_id AND t.user_role = 'trainer'
+        INNER JOIN locations l
+        ON c.class_location_id = l.location_id
+        INNER JOIN activities a
+        ON c.class_activity_id = a.activity_id
+        WHERE b.booking_removed = 0 AND c.class_id = ?
+    `, [classId])
+    .then(([queryResult]) => {
+        // Check if queryResult has results
+        return queryResult.length > 0
+            ? queryResult.map(result => newBookingClassUser(
+                result.booking_id,
+                result.member_id,
+                result.class_id,
+                result.booking_created_datetime,
+                result.class_datetime,
+                result.location_id,
+                result.location_name,
+                result.activity_id,
+                result.activity_name,
+                result.trainer_id,
+                result.trainer_firstname,
+                result.trainer_lastname,
+                result.member_firstname,
+                result.member_lastname
+            ))
+            : []; // Return an empty array if no results found
+    })
+    .catch(error => {
+        console.error('Database error: ', error);
+        return []; 
+    });
+}

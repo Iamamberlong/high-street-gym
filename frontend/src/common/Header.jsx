@@ -12,7 +12,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-gray-600 text-white shadow-lg">
+    <header className="bg-teal-500 text-white shadow-lg">
       <div className="container mx-auto flex justify-between items-center p-4">
         {/* Logo container */}
         <div className={`flex items-center ${isMenuOpen ? 'hidden' : 'flex'}`}>

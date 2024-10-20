@@ -67,6 +67,7 @@ export async function getUserById(userID) {
                 }
             }
         );
+        console.log("response.data.user: ", response.data.user)
         return response.data.user;
     } catch (error) {
         throw error.response?.data || error.message;
@@ -75,12 +76,12 @@ export async function getUserById(userID) {
 
 
 
-export async function update(user) {
+export async function update(updatedProfileData, userID) {
     const token = localStorage.getItem('jwtToken');
     try {
         const response = await axios.patch(
-            `${API_URL}/users/${user.id}`,
-            user,
+            `${API_URL}/users/${userID}`,
+            updatedProfileData,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,9 +89,10 @@ export async function update(user) {
                 }
             }
         );
-        console.log("response.data", response.data)
+        console.log("updated user in API: ", response.data)
         return response.data;
     } catch (error) {
+        console.log("error.message is: ", error.message)
         throw error.response?.data || error.message;
     }
 }

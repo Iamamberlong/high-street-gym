@@ -33,7 +33,7 @@ export function convertToMySQLDate(date) {
   });
   const day = date.toLocaleString('en-AU', {day: '2-digit'});
 
-  return [year, month, day].join('/');
+  return [year, month, day].join('-');
 
 }
 

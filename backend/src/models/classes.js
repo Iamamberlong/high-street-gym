@@ -95,6 +95,30 @@ export function getByTrainerIdAndDateTime(trainerID, classDateTime) {
     })
 }
 
+export function getByClassNameAndDate(className, classDate) {
+    return db_conn.query(
+        `SELECT * FROM classes 
+         WHERE class_activity_id = (SELECT activity_id FROM activities WHERE activity_name = ?) 
+         AND DATE(class_datetime) = ? 
+         AND class_removed = 0`,
+        [className, classDate]
+    ).then(([queryResult]) => {
+        if (queryResult.length > 0) {
+            // Assuming newClass is a function that formats the result as needed
+            return queryResult.map(result => newClass(
+                result.class_id,
+                result.class_datetime,
+                result.class_location_id,
+                result.class_activity_id,
+                result.class_trainer_user_id,
+                result.class_removed
+            ));
+        } else {
+            return Promise.reject("No classes found for the specified name and date.");          
+        }
+    });
+}
+
 
 export function update(gymClass) {
     return db_conn.query(
@@ -134,4 +158,30 @@ export function getLatestDate() {
         SELECT MAX(class_datetime) as latestDate
         FROM classes WHERE class_removed = 0`
     )
+}
+
+export function getByTrainerLocationDatetimeActivity(trainerId, locationId, classDatetime, activityId) {
+    return db_conn.query(
+        `SELECT * FROM classes 
+         WHERE class_trainer_user_id = ? 
+         AND class_location_id = ? 
+         AND class_datetime = ? 
+         AND class_activity_id = ? 
+         AND class_removed = 0`,
+        [trainerId, locationId, classDatetime, activityId]
+    ).then(([queryResult]) => {
+        if (queryResult.length > 0) {
+            const result = queryResult[0];
+            return newClass(
+                result.class_id,
+                result.class_datetime,
+                result.class_location_id,
+                result.class_activity_id,
+                result.class_trainer_user_id,
+                result.class_removed
+            );
+        } else {
+            return Promise.reject("No class found with the specified criteria.");
+        }
+    });
 }

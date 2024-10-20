@@ -63,7 +63,7 @@ export async function update(booking) {
                 headers: { 'Content-Type': 'application/json' }
             }
         );
-        return response.data.booking; // Ensure your backend responds with 'booking'
+        return response.data.booking; 
     } catch (error) {
         throw error.response?.data || error.message;
     }
@@ -98,7 +98,23 @@ export async function getMyBookings(token) {
         console.log("response.data.blogs: ", response.data.myBookings)
         return response.data.myBookings
     } catch (error) {
-        console.error('Error fetching my blogs using token ', error)
+        console.error('Error fetching my bookings using token ', error)
         throw error
     }
 }
+
+export async function getMembersByClassId(classId, token) {
+    try {
+        const response = await axios.get(`${API_URL}/bookings/${classId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
+            }
+        })
+        console.log("members are: ", response.data.members)
+        return response.data.members
+    } catch (error) {
+        console.error('Error fetching members using token', error)
+    }
+}
+

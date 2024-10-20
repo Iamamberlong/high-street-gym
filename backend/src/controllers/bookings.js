@@ -132,6 +132,22 @@ bookingController.delete(
     }
 )
 
+// get members list from bookings table
+
+bookingController.get("/bookings/:classId", async (req, res) => {
+    const classId = req.params.classId
+    console.log("class id is:", classId)
+    try {
+        const members = await BookingClassUsers.getMembersByClassId(classId)
+        console.log("members are: ", members)
+        res.status(200).json({status: 200, members: members.length > 0 ? members: []})  
+    } catch (error) {
+        console.error('Error fetching members by class ID: ', error)
+        res.status(500).json({error: "server error"})
+    }
+})
+
+
 bookingController.get(
     "/manage-bookings",
     auth(["admin"]),

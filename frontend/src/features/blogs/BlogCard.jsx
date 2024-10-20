@@ -20,7 +20,7 @@ export default function BlogCard({ blogPost, onEdit, onDelete, userRole }) {
         <div className="shadow-md rounded-lg overflow-hidden mb-4">
             <div className="p-4">
                 <h3 className="text-l font-bold mb-2">
-                    <Link to={`/blogs/${blogPost.id}`} className="text-blue-500 hover:underline">
+                    <Link to={`/blogs/${blogPost.id}`} className="text-gray-800 text-lg hover:underline">
                         {blogPost.title}
                     </Link>
                 </h3>
@@ -29,7 +29,7 @@ export default function BlogCard({ blogPost, onEdit, onDelete, userRole }) {
                     <div className="mb-2">
                         {onEdit && (
                             <button
-                                className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
+                                className="bg-blue-500 text-white px-2 py-1 rounded mr-2 border-0 w-20"
                                 onClick={() => onEdit(blogPost.id)}
                             >
                                 Edit
@@ -37,7 +37,7 @@ export default function BlogCard({ blogPost, onEdit, onDelete, userRole }) {
                         )}
                         {onDelete && (
                             <button
-                                className="bg-red-500 text-white px-2 py-1 rounded"
+                                className="bg-violet-400 text-white px-2 py-1 rounded w-20"
                                 onClick={() => onDelete(blogPost.id)}
                             >
                                 Delete

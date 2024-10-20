@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthentication } from "../authentication";
 
-import Header from "../../common/Header";
+import PageLayout from "../../common/PageLayout";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -36,14 +36,14 @@ function LoginPage() {
   };
 
   return (
-    <div>
-      <Header />
+    <PageLayout>
+   
       <div className="flex flex-col items-center w-full h-screen p-4">
         <form
           className="flex flex-col max-w-sm w-full p-6 shadow-lg rounded-lg mt-4"
           onSubmit={onLoginSubmit}
         >
-          <h2 className="text-3xl text-center mb-6">Login</h2>
+          <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
           <div className="form-control mb-4">
             <label className="label">
               <span className="label-text">Email</span>
@@ -51,7 +51,7 @@ function LoginPage() {
             <input
               type="email"
               placeholder="example@gmail.com"
-              className="input input-bordered w-full"
+              className="input input-bordered shadow-md w-full bg-white"
               value={formData.email}
               onChange={(e) =>
                 setFormData((existing) => ({
@@ -69,7 +69,7 @@ function LoginPage() {
             <input
               type="password"
               placeholder="******"
-              className="input input-bordered w-full"
+              className="input input-bordered shadow-md w-full bg-white"
               value={formData.password}
               onChange={(e) =>
                 setFormData((existing) => ({
@@ -80,10 +80,10 @@ function LoginPage() {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary w-full mb-4">
+          <button type="submit" className="btn btn-primary w-full mb-4 border-0 bg-teal-500">
             Login
           </button>
-          <div className="text-center">
+          <div className="text-center border-0">
             <p className="text-sm">
               Not a member?{" "}
               <button
@@ -95,11 +95,19 @@ function LoginPage() {
             </p>
           </div>
           {statusMessage && (
-            <p className="text-red-500 text-center mt-4">{statusMessage}</p>
+              <span
+              className={
+                statusMessage.includes("Logging")
+                  ? "text-yellow-500 text-center"
+                  : statusMessage.includes("successful")
+                  ? "text-green-500 text-center"
+                  : "text-red-500 text-center"
+              }
+            >{statusMessage}</span>
           )}
         </form>
       </div>
-    </div>
+    </PageLayout>
   );
 }
 

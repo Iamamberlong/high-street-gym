@@ -49,13 +49,29 @@ export async function getAll() {
 
 export async function getByDateRange(startDate, endDate) {
     try {
-        const response = await axios.get(`/classes/${startDate}/${(endDate)}`
+        const response = await axios.get(`${API_URL}/classes/${startDate}/${(endDate)}`
     , {
             headers: { 'Content-Type': 'application/json' }
         });
         return response.data
     } catch (error) {
         throw error.response?.data || error.message;
+    }
+}
+
+export async function getByClassNameAndDate(gymClassName, classDate) {
+    try {
+        console.log("full url: ", `${API_URL}/classes/${gymClassName}/${classDate}`)
+        console.log("gymClassName: ", gymClassName)
+        console.log("classDate: ", classDate)
+        const response = await axios.get(`${API_URL}/classes/${gymClassName}/${classDate}`, {
+            headers: { 'Content-Type': 'application/json' }
+        });
+        console.log("get by class name and date: ", response.data.classes)
+        return response.data.classes; // Return the class data
+       
+    } catch (error) {
+        throw error.response?.data || error.message; // Handle errors appropriately
     }
 }
 
@@ -93,21 +109,23 @@ export async function getByID(gymClassID) {
     }
 }
 
-export async function getMyGymClasses(token) {
+export async function getMyClasses(token) {
     try {
-        const response = await axios.get(`${API_URL}/my-classes`, {
+        const response = await axios.get(`${API_URL}/classes/my-classes`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
         })
-        console.log("response.data.blogs: ", response.data.myGymClasses)
-        return response.data.myGymClasses
+        console.log("response.data: ", response.data)
+        return response.data
     } catch (error) {
-        console.error('Error fetching my blogs using token ', error)
+        console.error('Error fetching my classes using token ', error)
         throw error
     }
 }
+
+
 
 
 
@@ -139,7 +157,7 @@ export async function remove(gymClassID, token) {
                 }
             }
         );
-        return response.data; // Handle the response as needed
+        return response.data; 
     } catch (error) {
         throw error.response?.data || error.message;
     }

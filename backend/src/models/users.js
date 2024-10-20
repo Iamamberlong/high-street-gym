@@ -247,14 +247,14 @@ export function getByUserRole(userRole) {
 
 export function update(user) {
     // Check if the email already exists
-    return db_conn.query("SELECT * FROM users WHERE user_email = ? AND user_removed = 0", [user.user_email])
+    return db_conn.query("SELECT * FROM users WHERE user_email = ? AND user_removed = 0 AND user_id != ?", [user.email, user.id])
         .then(([existingUsers]) => {
             if (existingUsers.length > 0) {
                 // Email already exists, reject the creation
                 return Promise.reject("Email already exists");
             } else {
                 // Check if the phone number already exists
-                return db_conn.query("SELECT * FROM users WHERE user_phone = ?", [user.user_phone]);
+                return db_conn.query("SELECT * FROM users WHERE user_phone = ? AND user_id != ?", [user.phone, user.id]);
             }
         })
         .then(([existingUsers]) => {

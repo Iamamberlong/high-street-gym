@@ -9,9 +9,28 @@ export default function BookingListPage() {
     const [bookings, setBookings] = useState([]);
     const [user] = useAuthentication();
 
+    // useEffect(() => {
+    //     Bookings.getAll().then(bookings => setBookings(bookings));
+    // }, []);
     useEffect(() => {
-        Bookings.getAll().then(bookings => setBookings(bookings));
+        Bookings.getAll().then(fetchedBookings => {
+            // Get today's date in 'YYYY-MM-DD' format
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Filter bookings to include only today's and future bookings
+            const filteredBookings = fetchedBookings.filter(booking => {
+                // Extract the date part and convert it to 'YYYY-MM-DD' format
+                const [day, month, year] = booking.booking_created_datetime.split(', ')[0].split('/');
+                const bookingDate = `${year}-${month}-${day}`; // Format to 'YYYY-MM-DD'
+                console.log('bookingDate: ', bookingDate)
+                return bookingDate >= today; // Compare dates
+            });
+            
+            setBookings(filteredBookings);
+            console.log("bookings: ", bookings) // Set the filtered bookings
+        });
     }, []);
+    
 
     // Check if user is admin
     const isAdmin = user && user.role === "admin";

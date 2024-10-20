@@ -1,9 +1,11 @@
 import express from "express";
 import { query, body, param, validationResult } from "express-validator";
+import validator from "validator";
 import { convertToMySQLDate } from "../database.js";
 import * as Blogs from "../models/blogs.js";
 import * as BlogsUsers from "../models/blogs-users.js";
 import auth from "../middleware/auth.js";
+import he from "he";
 
 const blogController = express.Router();
 
@@ -103,6 +105,7 @@ blogController.get(
       console.log("the blog id is: ", id)
       try {
         const blog = await Blogs.getById(id);
+        blog.content = decodeContent(blog.content)
         console.log("the blog is: ", blog)
         if (blog) {
           res.status(200).json({
@@ -127,6 +130,15 @@ blogController.get(
   );
 
 // Get a specific blog by ID
+
+const decodeContent = (content) => {
+  let decodedContent = he.decode(content);
+  while (decodedContent !== he.decode(decodedContent)) {
+    decodedContent = he.decode(decodedContent);
+  }
+  return decodedContent;
+};
+
 blogController.get(
   "/blogs/:id",
   param("id")
@@ -147,6 +159,10 @@ blogController.get(
       const blog = await Blogs.getById(id);
       console.log("the blog is: ", blog)
       if (blog) {
+
+        // Decode HTML-encoded content
+        blog.content = decodeContent(blog.content)
+        console.log("blog.content is: ", blog.content)
         res.status(200).json({
           status: 200,
           message: "Fetched blog",
@@ -217,8 +233,8 @@ blogController.post(
         null,
         formatDateTime(postDateTime),
         userID,
-        title,
-        content,
+        validator.escape(title),
+        validator.escape(content),
         0
       );
       console.log("The new blog is: ", newBlog);
@@ -277,6 +293,7 @@ blogController.put(
 
     try {
       const blog = await Blogs.getById(id);
+      blog.content = decodeContent(blog.content)
 
       if (!blog) {
         return res.status(400).json({
@@ -400,6 +417,7 @@ blogController.post(
 
     try {
       const blog = await Blogs.getById(id);
+      blog.content = decodeContent(blog.content)
 
       if (!blog) {
         return res.status(404).json({

@@ -39,13 +39,13 @@ export default function BlogListPage() {
                 <div className="flex justify-center mb-4">
                     <input
                         type="text"
-                        className="input input-bordered w-full max-w-md"
+                        className="input input-bordered shadow-md w-full bg-white max-w-md"
                         placeholder="Search blogs..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     <button
-                        className="btn btn-primary ml-2"
+                        className="btn btn-primary ml-2 bg-blue-500 text-base text-white w-40 border-0"
                         onClick={() => setSearchTerm(searchTerm)}
                     >
                         Search

@@ -54,7 +54,6 @@ export function getById(bookingID) {
         .then(([queryResult]) => {
             if (queryResult.length > 0) {
                 const result = queryResult[0]
-
                 return newBooking(
                     result.booking_id,
                     result.booking_user_id,
@@ -160,3 +159,19 @@ export async function reactivateBooking(bookingID) {
     }
 }
 
+export function getByClassId(classId) {
+    return db_conn.query(`SELECT * FROM bookings WHERE booking_class_id = ? AND booking_removed = 0`, [classId])
+        .then(([queryResult]) => {
+            if (queryResult.length > 0) {
+                return queryResult.map(result => newBooking(
+                    result.booking_id,
+                    result.booking_user_id,
+                    result.booking_class_id,
+                    result.booking_created_datetime,
+                    result.booking_removed
+                ));
+            } else {
+                return Promise.reject("No matching results");
+            }
+        });
+}

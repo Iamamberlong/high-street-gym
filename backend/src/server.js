@@ -25,13 +25,7 @@ app.use(cors({
     origin: true,
 }))
 
-// const corsOptions = {
-//     origin: 'http://localhost:8000', // Allow requests from localhost:8080
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-//   };
-  
-// app.use(cors(corsOptions));
+
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)

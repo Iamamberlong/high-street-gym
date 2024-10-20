@@ -6,33 +6,32 @@ import * as GymClasses from "../../api/classes";
 
 import { useAuthentication } from "../authentication";
 
-export default function Add({ onAdded }) {
+export default function ClassCreate({ onAdded }) {
   const [user, login, logout] = useAuthentication();
-
 
   const [formData, setFormData] = useState({
     activity_id: "",
     location_id: "",
     gymClass_date: "",
     gymClass_time: "",
-    gymClass_trainer: "",
+    gymClass_trainer: user.role=== "trainer" ? user.userID : "",
   });
 
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState({});
   const [statusMessage, setStatusMessage] = useState("");
 
   // Load activities
   const [activities, setActivities] = useState([]);
   useEffect(() => {
-    Activities.getAll().then((activities) => setActivities(activities))
-    console.log("activities are: ", activities)
-  }, [])
+    Activities.getAll().then((activities) => setActivities(activities));
+    console.log("activities are: ", activities);
+  }, []);
 
   // Load locations
   const [locations, setLocations] = useState([]);
   useEffect(() => {
     Locations.getAll().then((locations) => setLocations(locations));
-    console.log("lcoations are: ", locations)
+    console.log("lcoations are: ", locations);
   }, []);
 
   // Load trainers
@@ -50,7 +49,7 @@ export default function Add({ onAdded }) {
     while (currentHour <= 20) {
       const hour = currentHour % 12 === 0 ? 12 : currentHour % 12;
       const amPm = currentHour < 12 ? "AM" : "PM";
-      const timeString = `${hour.toString().padStart(2, '0')}:00 ${amPm}`;
+      const timeString = `${hour.toString().padStart(2, "0")}:00 ${amPm}`;
       times.push(timeString);
       currentHour += 1;
     }
@@ -75,8 +74,8 @@ export default function Add({ onAdded }) {
     setStatusMessage("");
 
     if (!validateForm()) {
-      setStatusMessage("Please correct the errors above.")
-      return
+      setStatusMessage("Please correct the errors above.");
+      return;
     }
 
     setStatusMessage("Creating a gym class...");
@@ -93,8 +92,8 @@ export default function Add({ onAdded }) {
     if (amPm === "AM" && hours === "12") {
       hours = "00";
     }
-    hours = hours.padStart(2, '0');
-    minutes = minutes.padStart(2, '0');
+    hours = hours.padStart(2, "0");
+    minutes = minutes.padStart(2, "0");
 
     // Format dateTime string
     const dateTime = `${year}-${month}-${day} ${hours}:${minutes}:00`;
@@ -117,7 +116,7 @@ export default function Add({ onAdded }) {
           location_id: "",
           gymClass_date: "",
           gymClass_time: "",
-          gymClass_trainer: "",
+          gymClass_trainer: user.role=== "trainer" ? user.userID : "",
         });
 
         if (typeof onAdded === "function") {
@@ -125,20 +124,22 @@ export default function Add({ onAdded }) {
         }
       })
       .catch((error) => {
-        setStatusMessage(error.response.data.message || "Failed to create gym class");
+        setStatusMessage(
+          error.response.data.message || "Failed to create gym class"
+        );
         console.error("Error:", error);
       });
   }
 
   return (
-    <div>
+    <div className="flex items-center justify-center h-screen">
       <form className="flex-grow m-4 max-w-2xl" onSubmit={addGymClass}>
         <div className="form-control">
           <label className="label">
-            <span className="label-text">Activity</span>
+            <span className="label-text text-base text-gray-800">Activity</span>
           </label>
           <select
-            className="select select-bordered"
+            className="select select-bordered shadow-md bg-white "
             value={formData.activity_id}
             onChange={(e) =>
               setFormData((existing) => ({
@@ -156,15 +157,16 @@ export default function Add({ onAdded }) {
               </option>
             ))}
           </select>
-          {errors.activity_id && <p className="text-red-500 text-sm">{errors.activity_id}</p>}
-  
+          {errors.activity_id && (
+            <p className="text-red-500 text-sm">{errors.activity_id}</p>
+          )}
         </div>
         <div className="form-control">
           <label className="label">
-            <span className="label-text">Location</span>
+            <span className="label-text text-base text-gray-800">Location</span>
           </label>
           <select
-            className="select select-bordered"
+            className="select select-bordered shadow-md bg-white"
             value={formData.location_id}
             onChange={(e) =>
               setFormData((existing) => ({
@@ -182,16 +184,17 @@ export default function Add({ onAdded }) {
               </option>
             ))}
           </select>
-          {errors.location_id && <p className="text-red-500 text-sm">{errors.location_id}</p>}
-     
+          {errors.location_id && (
+            <p className="text-red-500 text-sm">{errors.location_id}</p>
+          )}
         </div>
         <div className="form-control">
           <label className="label">
-            <span className="label-text">Date</span>
+            <span className="label-text text-base text-gray-800">Date</span>
           </label>
           <input
             type="date"
-            className="input input-bordered w-full"
+            className="input input-bordered shadow-md bg-white w-full"
             value={formData.gymClass_date}
             onChange={(e) =>
               setFormData((existing) => ({
@@ -200,15 +203,16 @@ export default function Add({ onAdded }) {
               }))
             }
           />
-          {errors.gymClass_date && <p className="text-red-500 text-sm">{errors.gymClass_date}</p>}
-    
+          {errors.gymClass_date && (
+            <p className="text-red-500 text-sm">{errors.gymClass_date}</p>
+          )}
         </div>
         <div className="form-control">
           <label className="label">
-            <span className="label-text">Time</span>
+            <span className="label-text text-base text-gray-800">Time</span>
           </label>
           <select
-            className="select select-bordered"
+            className="select select-bordered shadow-md bg-white"
             value={formData.gymClass_time}
             onChange={(e) =>
               setFormData((existing) => ({
@@ -226,15 +230,16 @@ export default function Add({ onAdded }) {
               </option>
             ))}
           </select>
-          {errors.gymClass_time && <p className="text-red-500 text-sm">{errors.gymClass_time}</p>}
-     
+          {errors.gymClass_time && (
+            <p className="text-red-500 text-sm">{errors.gymClass_time}</p>
+          )}
         </div>
         <div className="form-control">
           <label className="label">
-            <span className="label-text">Trainer</span>
+            <span className="label-text text-base text-gray-800">Trainer</span>
           </label>
           <select
-            className="select select-bordered"
+            className="select select-bordered shadow-md bg-white"
             value={formData.gymClass_trainer}
             onChange={(e) =>
               setFormData((existing) => ({
@@ -243,30 +248,39 @@ export default function Add({ onAdded }) {
               }))
             }
           >
-            <option value="" disabled>
-              Select Trainer
-            </option>
-            {
-              user.role === "trainer" ?(
-                <option value={user.userID}>
-                  {user.firstName} {user.lastName}
-                </option>
-              ) : (
-            trainers.map((trainer) => (
-              <option key={trainer.id} value={trainer.user_id}>
-                {trainer.firstname} {trainer.lastname}
+            {user.role === "trainer" ? (
+              <option value={user.userID}>
+                {user.firstName} {user.lastName}
               </option>
-            )))}
+            ) : (
+              <>
+                <option value="" disabled>
+                  Select Trainer
+                </option>
+                {trainers.map((trainer) => (
+                  <option key={trainer.id} value={trainer.user_id}>
+                    {trainer.firstname} {trainer.lastname}
+                  </option>
+                ))}
+              </>
+            )}
           </select>
-          {errors.gymClass_trainer && <p className="text-red-500 text-sm">{errors.gymClass_trainer}</p>}
-      
+          {errors.gymClass_trainer && (
+            <p className="text-red-500 text-sm">{errors.gymClass_trainer}</p>
+          )}
         </div>
         <div className="my-2">
-          <button className="btn btn-primary w-full mr-2 ">Add</button>
+          <button className="btn btn-primary w-full mr-2 mt-10 bg-blue-500 text-fold text-white text-lg">Add</button>
           <label className="label">
-          <span className={`label-text-alt text-center ${statusMessage.includes("successfully") ? "text-green-500" : "text-red-500"}`}>
-                {statusMessage}
-              </span>
+            <span
+              className={`label-text-alt text-center ${
+                statusMessage.includes("successfully")
+                  ? "text-green-500"
+                  : "text-red-500"
+              }`}
+            >
+              {statusMessage}
+            </span>
           </label>
         </div>
       </form>

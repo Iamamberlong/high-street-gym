@@ -151,6 +151,58 @@ activityController.get(
 //         })
 //       }
 // });
+const validateActivityXML = (data) => {
+  // Check if the root element is "activity-upload"
+  const activityUpload = data["activity-upload"];
+  if (!activityUpload) {
+      return false; // Root element missing
+  }
+
+  // Check for the "operation" attribute and ensure it's either "insert" or "update"
+  const activityUploadAttributes = activityUpload["$"];
+  const operation = activityUploadAttributes?.["operation"];
+  if (!operation || (operation !== "insert" && operation !== "update")) {
+      return false; // Invalid or missing operation attribute
+  }
+
+  // Check if there is an "activities" element and it contains "activity" elements
+  const activitiesData = activityUpload["activities"]?.[0]?.["activity"];
+  if (!activitiesData || activitiesData.length === 0) {
+      return false; // No "activities" or empty "activity" list
+  }
+
+  // Iterate over each activity and validate its structure
+  for (const activity of activitiesData) {
+      // Check required elements: name, description, duration
+      if (!activity.name || !activity.description || !activity.duration) {
+          return false; // Missing required fields
+      }
+
+      // If operation is "update", the "id" element is required
+      if (operation === "update" && !activity.id) {
+          return false; // Missing "id" in update operation
+      }
+
+      // Additional optional validation:
+      // Ensure "id" (if present), "name", "description", and "duration" are non-empty strings
+      if (activity.id && activity.id.toString().trim() === "") {
+          return false; // Empty "id" field in update
+      }
+      if (activity.name.toString().trim() === "") {
+          return false; // Empty "name" field
+      }
+      if (activity.description.toString().trim() === "") {
+          return false; // Empty "description" field
+      }
+      if (activity.duration.toString().trim() === "") {
+          return false; // Empty "duration" field
+      }
+  }
+
+  // If all validations pass, return true
+  return true;
+};
+
 
 activityController.post("/activities/upload-xml", auth(["admin"]), (req, res) => {
   if (req.files && req.files["xml-file"]) {
@@ -162,6 +214,14 @@ activityController.post("/activities/upload-xml", auth(["admin"]), (req, res) =>
       const parser = new xml2js.Parser();
       parser.parseStringPromise(file_text)
           .then(data => {
+
+              const isValid = validateActivityXML(data)
+              if (!isValid) {
+                return res.status(400).json({
+                  status: 400,
+                  message: "XML file is invalid. Please provide a correctly structured XML file.",
+                })
+              }
               const activityUpload = data["activity-upload"];
               const activityUploadAttributes = activityUpload["$"];
               const operation = activityUploadAttributes["operation"];

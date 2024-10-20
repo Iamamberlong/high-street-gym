@@ -131,11 +131,11 @@ export default function MyBlogsPage() {
     <PageLayout>
     
       <div className="container p-2 mx-auto">
-        <h2 className="text-center">My Blogs</h2>
+        <h2 className="text-center text-2xl font-bold ">My Blogs</h2>
         <div className="text-center mb-4">
           <button 
             onClick={handleCreate}
-            className="btn btn-primary"
+            className="btn btn-primary border-md bg-blue-500 text-lg text-white mt-8"
           >
             Create New Blog
           </button>

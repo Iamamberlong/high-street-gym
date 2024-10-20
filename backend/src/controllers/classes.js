@@ -1,5 +1,7 @@
 import express from "express";
 import validator from "validator";
+import moment from "moment-timezone";
+import { query, body, param, validationResult } from "express-validator";
 import * as Classes from "../models/classes.js";
 import * as ClassActivityLocationTrainers from "../models/classes-activities-locations-trainers.js";
 import * as Activities from "../models/activities.js";
@@ -284,16 +286,19 @@ classController.post(
       console.log("isvalid: ", isValidDateTime);
 
       try {
-        const existing = await Classes.getByTrainerIdAndDateTime(user_id, dateTime)
-        console.log("existing: ", existing)
+        const existing = await Classes.getByTrainerLocationDatetimeActivity(
+          user_id,
+          location_id,
+          dateTime,
+          activity_id,
+        );
+        console.log("existing: ", existing);
         if (existing) {
           res.status(400).json({
             status: 400,
-            message:  "The trainer already has class at the date and time."
-          })
+            message: "The trainer already has class at the date and time.",
+          });
         }
-
-        
       } catch (error) {
         if (error === "Trainer has no class at this date and time.") {
           const classData = {
@@ -312,20 +317,20 @@ classController.post(
               data: createdClass,
             });
           } catch (createError) {
-            console.error("Error creating class: ", createError)
+            console.error("Error creating class: ", createError);
             return res.status(500).json({
               status: 500,
               message: "Error creating class.",
-              error: createError.message
-            })
+              error: createError.message,
+            });
           }
         } else {
-          console.error("Unexpected error: ", error)
+          console.error("Unexpected error: ", error);
           return res.status(500).json({
             status: 500,
             message: "Error checking duplicated class.",
-            error: error.message
-          })
+            error: error.message,
+          });
         }
       }
     } catch (error) {
@@ -338,8 +343,6 @@ classController.post(
     }
   }
 );
-
-
 
 //// ****** the following code is working ******
 classController.get("/classes", async (req, res) => {
@@ -356,12 +359,14 @@ classController.get("/classes", async (req, res) => {
     const today = new Date();
     const mondayOfThisWeek = new Date(today);
     mondayOfThisWeek.setDate(today.getDate() - (today.getDay() - 1));
+    console.log("Monday of this week:", mondayOfThisWeek);
     const sundayOfThisWeek = new Date(mondayOfThisWeek);
     sundayOfThisWeek.setDate(sundayOfThisWeek.getDate() + 6);
 
     const dateOfMonday = convertToJSDate(mondayOfThisWeek);
+    console.log("dateofMonday: ", dateOfMonday);
     const dateOfSunday = convertToJSDate(sundayOfThisWeek);
-
+    console.log("dateofSunday", dateOfSunday);
     const classesThisWeek =
       await ClassActivityLocationTrainers.getAllByDateRange(
         convertToMySQLDate(mondayOfThisWeek),
@@ -381,8 +386,16 @@ classController.get("/classes", async (req, res) => {
     for (const classActivityLocationTrainer of classesThisWeek) {
       const classDayName =
         daysOfWeek[classActivityLocationTrainer.class_datetime.getDay()];
+
+      const formattedDate = convertToMySQLDate(
+        classActivityLocationTrainer.class_datetime
+      );
+      console.log('formattedDate is:', formattedDate)
+      classActivityLocationTrainer.class_datetime = formattedDate; // Update the date
+
       classesByDay[classDayName].push(classActivityLocationTrainer);
     }
+    console.log("classesByDay", classesByDay);
 
     res.status(200).json({
       classesByDay,
@@ -398,26 +411,45 @@ classController.get("/classes", async (req, res) => {
   }
 });
 
+classController.get("/classes/:gymClassName/:classDate", async (req, res) => {
+  const { gymClassName, classDate } = req.params;
+  console.log("gymClassName is: ", gymClassName);
+  console.log("gymClass date: ", classDate);
+  try {
+    let classes = await ClassActivityLocationTrainers.getByClassNameAndDate(
+      gymClassName,
+      classDate
+    );
+    
+    classes = classes.map(gymClass => {
+      return {
+        ...gymClass,
+        class_datetime: convertToMySQLDate(gymClass.class_datetime) + convertToMySQLTime(gymClass.class_datetime)
+      }
+    })
+    console.log("classes are: ", classes);
+    res.status(200).json({classes}); // Return the class data as JSON
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    res.status(404).json({ message: error }); // Return a 404 response if no results are found
+  }
+});
 
-classController.get("/classes/:startDate/:endDate", async (req, res) => {
- 
+classController.get(
+  "/classes/my-classes",
+  auth(["admin", "trainer"]),
+  async (req, res) => {
     try {
-      const { startDate, endDate } = req.query
-      console.log("req.query for startDate and endDate is: ", req.query)
-   
-  
-      const start = convertToJSDate(startDate);
-      const end = convertToJSDate(endDate);
-  
-      const gymClasses =
-        await ClassActivityLocationTrainers.getAllByDateRange(
-          convertToMySQLDate(mondayOfThisWeek),
-          convertToMySQLDate(sundayOfThisWeek)
-        );
-  
-     
+      const { userID } = req.user;
+      console.log("req.user: ", userID);
+
+      const myGymClasses =
+        await ClassActivityLocationTrainers.getAllByTrainerId(userID);
+      console.log("myGymClasses: ", myGymClasses);
       res.status(200).json({
-     gymClasses
+        status: 200,
+        message: "Get my classes successfully.",
+        data: myGymClasses,
       });
     } catch (error) {
       res.status(500).json({
@@ -425,12 +457,35 @@ classController.get("/classes/:startDate/:endDate", async (req, res) => {
         message: error.message,
       });
     }
-  });
-  
+  }
+);
 
+classController.get("/classes/:startDate/:endDate", async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+    console.log("req.query for startDate and endDate is: ", req.query);
+
+    const start = convertToJSDate(startDate);
+    const end = convertToJSDate(endDate);
+
+    const gymClasses = await ClassActivityLocationTrainers.getAllByDateRange(
+      convertToMySQLDate(mondayOfThisWeek),
+      convertToMySQLDate(sundayOfThisWeek)
+    );
+
+    res.status(200).json({
+      gymClasses,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "Error",
+      message: error.message,
+    });
+  }
+});
 
 // classController.get("/classes/:startDate/:endDate", async (req, res) => {
- 
+
 //   try {
 //     const { startDate, endDate } = req.query
 //     console.log("req.query for startDate and endDate is: ", req.query)
@@ -487,5 +542,43 @@ classController.get("/classes/:startDate/:endDate", async (req, res) => {
 //     });
 //   }
 // });
+
+classController.delete(
+  "/classes/:id",
+  auth(["admin", "trainer"]), // Adjust roles as needed
+  [
+    param("id")
+      .isInt({ gt: 0 })
+      .withMessage("Class ID must be a positive integer"),
+  ],
+  async (req, res) => {
+    const { id } = req.params;
+
+    // Validate request parameters
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: 400,
+        message: "Invalid class ID",
+        errors: errors.array(),
+      });
+    }
+
+    try {
+      // Call API function to archive the class
+      await Classes.deleteById(id); // Implement this function in your API layer
+      res.status(200).json({
+        status: 200,
+        message: "Class successfully archived",
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        message: "Failed to archive class",
+        error: error.message,
+      });
+    }
+  }
+);
 
 export default classController;

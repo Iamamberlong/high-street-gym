@@ -5,7 +5,7 @@ import React from 'react';
 function TrainerCard({ trainerName, description, photoUrl }) {
 
   return (
-    <div className="card w-full bg-base-100 shadow-xl mb-4">
+    <div className="card w-full bg-base-100 shadow-xl mb-4 bg-slate-200">
       <div className="card-body flex items-center">
         <img
           src={photoUrl}

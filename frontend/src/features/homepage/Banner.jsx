@@ -14,7 +14,7 @@ const Banner = () => {
                 <h1 className="text-3xl md:text-4xl font-bold mb-4">Welcome to High Street Gym</h1>
                 <p className="mb-4 text-center text-sm md:text-base">Join us to achieve your fitness goals!</p>
                 <button 
-                    className="btn btn-primary px-6 py-3 text-sm md:text-base" 
+                    className="btn btn-primary bg-blue-500 w-40 h-20 text-3xl text-white px-6 py-3 md:text-base" 
                     onClick={() => navigate('/register')}
                 >
                     Join Us

@@ -62,6 +62,37 @@ locationController.get(
 )
 
 // #3 Uploading xml file
+const validateLocationXML = (data) => {
+    // Check if the root element <location-upload> exists
+    const locationUpload = data["location-upload"];
+    if (!locationUpload) {
+        return "Missing root element <location-upload>.";
+    }
+
+    // Check if the "operation" attribute exists and is either "insert" or "update"
+    const locationUploadAttributes = locationUpload["$"];
+    const operation = locationUploadAttributes?.["operation"];
+    if (!operation || (operation !== "insert" && operation !== "update")) {
+        return "Invalid or missing 'operation' attribute. Must be 'insert' or 'update'.";
+    }
+
+    // Check if the <locations> array exists
+    const locationsData = locationUpload["locations"]?.[0]?.["location"];
+    if (!locationsData || locationsData.length === 0) {
+        return "The <locations> element is missing or empty.";
+    }
+
+    // Ensure each location has a name, address, and phone
+    for (const location of locationsData) {
+        if (!location.name || !location.address || !location.phone) {
+            return "Each <location> must contain <name>, <address>, and <phone> elements.";
+        }
+    }
+
+    // If all checks passed, return null (no errors)
+    return null;
+};
+
 locationController.post("/locations/upload-xml", auth(["admin"]), (req, res) => {
     if (req.files && req.files["xml-file"]) {
         // Access the XML file as a string
@@ -72,10 +103,17 @@ locationController.post("/locations/upload-xml", auth(["admin"]), (req, res) => 
         const parser = new xml2js.Parser();
         parser.parseStringPromise(file_text)
             .then(data => {
+                const validationError = validateLocationXML(data)
+                if (validationError) {
+                    return res.status(400).json({
+                        status: 400,
+                        message: "XML file is invalid, please provide a correctly structured XML file."
+                    })
+                }
+
                 const locationUpload = data["location-upload"]
                 const locationUploadAttributes = locationUpload["$"]
                 const operation = locationUploadAttributes["operation"]
-                // Slightly painful indexing to reach nested children
                 const locationsData = locationUpload["locations"][0]["location"]
 
                 console.log("locationsData looks like: ", locationsData)
@@ -157,8 +195,6 @@ locationController.post(
         }
         // get location data from the form
         const locationData = req.body
-  
-
         // Convert the location data into an Location model object
         const location = Locations.newLocation(null, locationData.name)
 

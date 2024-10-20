@@ -28,7 +28,7 @@ const Footer = () => {
   }
 
   return (
-    <footer className="bg-gray-600 text-white py-6 w-full sticky bottom-0">
+    <footer className="bg-teal-500 text-white py-6 w-full sticky bottom-0">
       <div className="container mx-auto flex flex-col items-center space-y-4">
         {/* Social Media Icons */}
         <div className="flex space-x-6">
@@ -144,7 +144,7 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <p className="text-center text-gray-400 mt-4">
+        <p className="text-center text-slate-50 mt-4">
           &copy; {new Date().getFullYear()} High Street Gym. All rights
           reserved.
         </p>
